@@ -46,6 +46,12 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      isSubmitting: false,
+      isSubmitted: false,
+      responseMessage: ""
+    };
+
     this.inputs = {
       fristname: "",
       lastname: "",
@@ -61,18 +67,70 @@ class SignIn extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log(`form submitted with inputs ${inputs}.`);
+    console.log(`form submitted with inputs ${this.inputs}.`);
 
+    this.setState({ isSubmitting: true, isSubmitted: false });
     axios.post(ADD_CONTESTANT_URL, this.inputs)
       .then(response => {
         console.log("Contestant added!");
         console.log(response);
+
+        this.setState({ isSubmitting: false, isSubmitted: true, responseMessage: "You've been entered! Check your email for confirmation." });
       })
       .catch(error => {
         console.log("Error adding contestant.");
-        console.error(error);
+
+        console.log("error message: ");
+        console.log(error.message);
+
+        debugger;
+        
+        this.setState({ isSubmitting: false, isSubmitted: false });
       })
   };
+
+  renderForm = () => {
+    if(this.state.isSubmitting && this.state.isSubmitted) return null;
+
+    const { classes } = this.props;
+
+    return (
+      <form className={classes.form} onSubmit={ this.handleSubmit }>
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="email">Email Address</InputLabel>
+          <Input id="email" name="email" autoComplete="email" autoFocus onChange={ this.handleInputChange } />
+        </FormControl>
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="firstname">First Name</InputLabel>
+          <Input name="firstname" type="text" id="firstname" autoComplete="given-name" onChange={ this.handleInputChange } />
+        </FormControl>
+        <FormControl margin="normal" fullWidth>
+          <InputLabel htmlFor="lastname">Last Name</InputLabel>
+          <Input name="lastname" type="text" id="lastname" autoComplete="family-name" onChange={ this.handleInputChange } />
+        </FormControl>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          style={{background:"#7dc4fa"}}
+        >
+          Submit &hearts;
+        </Button>
+      </form>
+    );
+  };
+
+  renderLoader = () => {
+    if(!this.state.isSubmitting) return null;
+
+    return (
+      <Typography component="h4" style={{color:'#5C5C5C'}}>
+        Sending...
+      </Typography>
+    );
+  }
 
   render(){
     const { classes } = this.props;
@@ -95,30 +153,11 @@ class SignIn extends Component {
           <Typography component="h4" style={{color:'#5C5C5C'}}>
             7pm PST Thursday, May 16th
           </Typography>
-          <form className={classes.form} onSubmit={ this.handleSubmit }>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input id="email" name="email" autoComplete="email" autoFocus onChange={ this.handleInputChange } />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="firstname">First Name</InputLabel>
-              <Input name="firstname" type="text" id="firstname" autoComplete="given-name" onChange={ this.handleInputChange } />
-            </FormControl>
-            <FormControl margin="normal" fullWidth>
-              <InputLabel htmlFor="lastname">Last Name</InputLabel>
-              <Input name="lastname" type="text" id="lastname" autoComplete="family-name" onChange={ this.handleInputChange } />
-            </FormControl>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              style={{background:"#7dc4fa"}}
-            >
-              Submit &hearts;
-            </Button>
-          </form>
+          { this.renderLoader() }
+          { this.renderForm() }
+          <Typography component="h4" style={{color:'#5C5C5C'}}>
+            { this.state.responseMessage }
+          </Typography>
         </Paper>
       </main>
     );
