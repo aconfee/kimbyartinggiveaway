@@ -61,9 +61,7 @@ class SignIn extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-
-    const {firstname, lastname, email} = this.inputs;
-    console.log(`form submitted with inputs ${firstname}, ${lastname}, ${email}.`);
+    console.log(`form submitted with inputs ${inputs}.`);
 
     axios.post(ADD_CONTESTANT_URL, this.inputs)
       .then(response => {
