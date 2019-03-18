@@ -1,0 +1,80 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/repo
+
+    docker:
+      - image: circleci/node:8.11.1-stretch
+
+    steps:
+      - checkout
+
+      - run:
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: 
+          name: Install npm
+          command: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: 
+          name: Building
+          command: npm run build
+          
+      - save_cache:
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH}}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - build
+
+  deploy:
+    working_directory: ~/repo
+
+    docker:
+      - image: circleci/node:8.11.1-stretch
+
+    steps: 
+      - run: 
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+
+      - restore_cache:
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run:
+          name: Install AWS CLI
+          command: sudo apt-get -y -qq install awscli
+
+      - run: 
+          name: Setting signature version 4 for s3 request authentication
+          command: aws configure set default.s3.signature_version s3v4
+
+      - run: 
+          name: Deploy to S3
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              aws --region us-west-2 s3 sync build s3://giveaway.kimbyarting.com --delete
+            fi
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master

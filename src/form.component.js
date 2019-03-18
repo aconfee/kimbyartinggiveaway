@@ -69,10 +69,6 @@ function SignIn(props) {
             <InputLabel htmlFor="lastname">Last Name</InputLabel>
             <Input name="lastname" type="text" id="lastname" autoComplete="family-name" />
           </FormControl>
-          <FormControl margin="normal" fullWidth>
-            <InputLabel htmlFor="instagramhandle">IG Handle</InputLabel>
-            <Input name="instagramhandle" type="text" id="instagramhandle" autoComplete="off" />
-          </FormControl>
           <Button
             type="submit"
             fullWidth
