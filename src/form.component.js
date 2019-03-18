@@ -45,7 +45,7 @@ function SignIn(props) {
     <main className={classes.main}>
       <CssBaseline />
       <Paper className={classes.paper}>
-        <img className='giveaway-image' src='./giveawayimage.jpg' />
+        <img className='giveaway-image' src='./giveawayimage.jpg' alt="Giveaway product cover." />
         <br />
         <Typography component="h1" variant="h5" style={{color:'#5C5C5C', marginBottom:'7px'}}>
           Enter Giveaway!
