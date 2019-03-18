@@ -19,7 +19,7 @@ class App extends Component {
           </Toolbar>
         </AppBar>
 
-        <Form />
+        <Form onSubmit={this.handleSubmit} />
       </div>
     );
   }
