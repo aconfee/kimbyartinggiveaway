@@ -87,10 +87,13 @@ class SignIn extends Component {
             Enter Giveaway!
           </Typography>
           <Typography component="h4" style={{color:'#5C5C5C'}}>
-            11"x17" print of the art featured above.
+            3 winners
           </Typography>
           <Typography component="h4" style={{color:'#5C5C5C'}}>
-            3 winners. Ends @ 7pm PST Thursday, May 16th. 
+            11"x17" print
+          </Typography>
+          <Typography component="h4" style={{color:'#5C5C5C'}}>
+            7pm PST Thursday, May 16th
           </Typography>
           <form className={classes.form} onSubmit={ this.handleSubmit }>
             <FormControl margin="normal" required fullWidth>
