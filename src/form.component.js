@@ -80,17 +80,21 @@ class SignIn extends Component {
       .catch(error => {
         console.log("Error adding contestant.");
 
-        console.log("error message: ");
+        console.log("error objects: ");
         console.log(error.message);
+        console.log(error.response);
+        console.log(error.body);
+        console.log(error.date);
+        console.log(error.error);
 
         debugger;
-        
+
         this.setState({ isSubmitting: false, isSubmitted: false });
       })
   };
 
   renderForm = () => {
-    if(this.state.isSubmitting && this.state.isSubmitted) return null;
+    if(this.state.isSubmitting || this.state.isSubmitted) return null;
 
     const { classes } = this.props;
 
