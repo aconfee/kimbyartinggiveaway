@@ -48,7 +48,7 @@ class SignIn extends Component {
 
     this.state = {
       isSubmitting: false,
-      isSubmitted: true,
+      isSubmitted: false,
       successMessage: "", 
       errorMessage: ""
     };
