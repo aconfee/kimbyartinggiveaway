@@ -76,11 +76,9 @@ class SignIn extends Component {
         this.setState({ isSubmitting: false, isSubmitted: true, successMessage: "You've been entered! Check your email for confirmation.", errorMessage: "" });
       })
       .catch(error => {
-        console.log(error.data);
-        console.log(error.response);
         let message = "";
-        if(error.data.error) message = error.data.error;
-        else message = error.data.response.message;
+        if(error.response.data.error) message = error.response.data.error;
+        else message = error.response.data.message;
 
         if(message === `${this.inputs.email} is already entered in the giveaway.`) {
           this.setState({ isSubmitting: false, isSubmitted: true, responseMessage: "You're already entered :)"});
