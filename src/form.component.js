@@ -85,7 +85,7 @@ class SignIn extends Component {
         console.log("email is: ", this.inputs.email);
 
         if(message.includes("is already entered in the giveaway")) {
-          this.setState({ isSubmitting: false, isSubmitted: true, responseMessage: "You're already entered :)"});
+          this.setState({ isSubmitting: false, isSubmitted: true, successMessage: "You're already entered :)"});
         }
         else if(message.includes("provide a valid email address")) {
           this.setState({ isSubmitting: false, isSubmitted: false, errorMessage: message, successMessage: ""});
