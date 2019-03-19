@@ -48,8 +48,9 @@ class SignIn extends Component {
 
     this.state = {
       isSubmitting: false,
-      isSubmitted: false,
-      responseMessage: ""
+      isSubmitted: true,
+      successMessage: "", 
+      errorMessage: ""
     };
 
     this.inputs = {
@@ -72,24 +73,22 @@ class SignIn extends Component {
     this.setState({ isSubmitting: true, isSubmitted: false });
     axios.post(ADD_CONTESTANT_URL, this.inputs)
       .then(response => {
-        console.log("Contestant added!");
-        console.log(response);
-
-        this.setState({ isSubmitting: false, isSubmitted: true, responseMessage: "You've been entered! Check your email for confirmation." });
+        this.setState({ isSubmitting: false, isSubmitted: true, successMessage: "You've been entered! Check your email for confirmation.", errorMessage: "" });
       })
       .catch(error => {
-        console.log("Error adding contestant.");
+        let message = "";
+        if(error.data.error) message = error.data.error;
+        else message = error.data.response.message;
 
-        console.log("error objects: ");
-        console.log(error.message);
-        console.log(error.response);
-        console.log(error.body);
-        console.log(error.date);
-        console.log(error.error);
-
-        debugger;
-
-        this.setState({ isSubmitting: false, isSubmitted: false });
+        if(message === `${this.inputs.email} is already entered in the giveaway.`) {
+          this.setState({ isSubmitting: false, isSubmitted: true, responseMessage: "You're already entered :)"});
+        }
+        else if(message === "Please provide a valid email address.") {
+          this.setState({ isSubmitting: false, isSubmitted: false, errorMessage: message, successMessage: ""});
+        }
+        else {
+          this.setState({ isSubmitting: false, isSubmitted: false, errorMessage: "Something went wrong. Message me @kimbyarting for help, or try again.", successMessage: ""});
+        }        
       })
   };
 
@@ -130,9 +129,12 @@ class SignIn extends Component {
     if(!this.state.isSubmitting) return null;
 
     return (
-      <Typography component="h4" style={{color:'#5C5C5C'}}>
-        Sending...
-      </Typography>
+      <div>
+        <br />
+        <Typography component="h4" style={{color:'#00e800'}}>
+          Sending...
+        </Typography>
+      </div>
     );
   }
 
@@ -159,8 +161,12 @@ class SignIn extends Component {
           </Typography>
           { this.renderLoader() }
           { this.renderForm() }
-          <Typography component="h4" style={{color:'#5C5C5C'}}>
-            { this.state.responseMessage }
+          <br />
+          <Typography component="h4" style={{color:'#00e800'}}>
+            { this.state.successMessage }
+          </Typography>
+          <Typography component="h4" style={{color:'#e60017'}}>
+            { this.state.errorMessage }
           </Typography>
         </Paper>
       </main>
