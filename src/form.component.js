@@ -70,7 +70,7 @@ class SignIn extends Component {
     event.preventDefault();
     console.log(`form submitted with inputs ${this.inputs}.`);
 
-    this.setState({ isSubmitting: true, isSubmitted: false });
+    this.setState({ isSubmitting: true, isSubmitted: false, successMessage: "", errorMessage: "" });
     axios.post(ADD_CONTESTANT_URL, this.inputs)
       .then(response => {
         this.setState({ isSubmitting: false, isSubmitted: true, successMessage: "You've been entered! Check your email for confirmation.", errorMessage: "" });
