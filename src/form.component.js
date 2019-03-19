@@ -80,7 +80,7 @@ class SignIn extends Component {
         if(error.response.data.error) message = error.response.data.error;
         else message = error.response.data.message;
 
-        if(message === `${this.inputs.email} is already entered in the giveaway.`) {
+        if(message.includes("is already entered in the giveaway.")) {
           this.setState({ isSubmitting: false, isSubmitted: true, responseMessage: "You're already entered :)"});
         }
         else if(message === "Please provide a valid email address.") {
