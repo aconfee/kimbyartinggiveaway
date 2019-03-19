@@ -76,6 +76,8 @@ class SignIn extends Component {
         this.setState({ isSubmitting: false, isSubmitted: true, successMessage: "You've been entered! Check your email for confirmation.", errorMessage: "" });
       })
       .catch(error => {
+        console.log(error.data);
+        console.log(error.response);
         let message = "";
         if(error.data.error) message = error.data.error;
         else message = error.data.response.message;
